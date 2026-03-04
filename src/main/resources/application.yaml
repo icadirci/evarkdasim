@@ -1,0 +1,26 @@
+spring:
+  application:
+    name: evarkadasim-api
+  threads:
+    virtual:
+      enabled: true # Java 21+ kullanıyorsan bu çok iyi, performans uçar!
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true # SQL'leri okunaklı basar
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  datasource:
+    url: ${DB_URL}
+    username: ${DB_USER}
+    password: ${DB_PASS}
+    driver-class-name: org.postgresql.Driver
+  sql:
+    init:
+      mode: never # data.sql'i her zaman okumaya zorlar
