@@ -1,6 +1,8 @@
 package com.evarkdasim.evarkadasim_api.controller.auth;
 
+import com.evarkdasim.evarkadasim_api.dto.request.auth.LoginRequest;
 import com.evarkdasim.evarkadasim_api.dto.request.auth.RegisterRequest;
+import com.evarkdasim.evarkadasim_api.dto.response.auth.LoginResponse;
 import com.evarkdasim.evarkadasim_api.dto.response.auth.RegisterResponse;
 import com.evarkdasim.evarkadasim_api.entity.User;
 import com.evarkdasim.evarkadasim_api.service.AuthService;
@@ -26,6 +28,12 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> register(@Valid @RequestBody RegisterRequest registerRequest){
         RegisterResponse response = authService.register(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@Valid @RequestBody LoginRequest loginRequest) {
+        LoginResponse response = authService.login(loginRequest);
+        return ResponseEntity.ok().body(response);
     }
 
 

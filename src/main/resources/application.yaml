@@ -1,6 +1,8 @@
 spring:
   application:
     name: evarkadasim-api
+  profiles:
+    active: dev
   threads:
     virtual:
       enabled: true # Java 21+ kullanıyorsan bu çok iyi, performans uçar!
