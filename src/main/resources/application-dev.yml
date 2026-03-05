@@ -10,7 +10,7 @@ spring:
     show-sql: true
     defer-datasource-initialization: true
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true # SQL'leri okunaklı basar
@@ -23,7 +23,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   sql:
     init:
-      mode: always # data.sql'i her zaman okumaya zorlar
+      mode: never
 application:
   security:
     jwt:
