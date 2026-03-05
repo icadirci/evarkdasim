@@ -45,21 +45,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults()) // Frontend erişimi için senin yazdığın CORS ayarlarını kullanır
-                .csrf(csrf -> csrf.disable()) // Stateless (JWT) yapıda CSRF'e gerek yok
+                .cors(Customizer.withDefaults())
+                .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Sunucuda session tutma, her istekte token bekle
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll() // Register ve hata sayfalarını herkese aç
-                        .anyRequest().authenticated() // Diğer tüm endpoint'ler için geçerli bir JWT şart
+                        .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
+                        .anyRequest().authenticated()
                 )
-                // JWT Filtresini ekliyoruz: Standart kullanıcı adı/şifre kontrolünden önce bizim filtre çalışsın
+
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .authenticationProvider(authenticationProvider()) // Senin yazdığın CustomUserDetailsService'i kullanır
+                .authenticationProvider(authenticationProvider())
                 .exceptionHandling(ex -> ex
-                        .authenticationEntryPoint(authenticationEntryPoint()) // 401 hataları için senin yazdığın JSON dönen yapı
-                        .accessDeniedHandler(accessDeniedHandler()) // 403 hataları için senin yazdığın JSON dönen yapı
+                        .authenticationEntryPoint(authenticationEntryPoint())
+                        .accessDeniedHandler(accessDeniedHandler())
                 );
 
         return http.build();
