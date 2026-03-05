@@ -1,11 +1,13 @@
 package com.evarkdasim.evarkadasim_api.entity;
 
+import com.evarkdasim.evarkadasim_api.enums.User.Role;
 import com.evarkdasim.evarkadasim_api.enums.listing.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDate;
@@ -54,13 +56,15 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
     private List<Listing> listings;
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
+    @Enumerated(EnumType.STRING)
+    private Role role = Role.ROLE_USER;
 
     @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    @Override
     public String getUsername() {
-        return this.email; // Giriş parametren neyse (email/username)
+        return this.email;
     }
 }
