@@ -12,7 +12,7 @@ import java.util.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder // Test yazarken veya obje oluştururken hayat kurtarır
+@Builder
 public class Listing {
 
     @Id
@@ -48,8 +48,8 @@ public class Listing {
     @Column(nullable = false, length = 20)
     private GenderPreference genderPreference;
 
-    @OneToMany(mappedBy = "listing", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<ListingDetails> details = new ArrayList<>();
+    @OneToOne(mappedBy = "listing", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private ListingDetails details;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(

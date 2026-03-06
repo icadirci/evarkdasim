@@ -1,10 +1,16 @@
 package com.evarkdasim.evarkadasim_api.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class ListingDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
