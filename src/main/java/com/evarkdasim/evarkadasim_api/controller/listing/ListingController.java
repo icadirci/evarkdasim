@@ -7,6 +7,7 @@ import com.evarkdasim.evarkadasim_api.entity.User;
 import com.evarkdasim.evarkadasim_api.service.listing.ListingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -27,6 +28,6 @@ public class ListingController {
     @PostMapping
     public ResponseEntity<CreateListingResponse> create(@Valid @RequestBody CreateListingRequest createListingRequest, @AuthenticationPrincipal User user) {
         CreateListingResponse response = listingService.create(createListingRequest, user);
-        return ResponseEntity.ok().body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 }

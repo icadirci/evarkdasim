@@ -23,7 +23,7 @@ public class ListingService {
     public CreateListingResponse create(CreateListingRequest request, User user) {
         City city = cityRepository.getReferenceById(request.cityId());
         District district = districtRepository.getReferenceById(request.districtId());
-        Neighborhood neighborhood = neighborhoodsRepository.getReferenceById(request.neighborhoodsId());
+        Neighborhood neighborhood = neighborhoodsRepository.getReferenceById(request.neighborhoodId());
         Listing listing = new Listing();
         listing.setTitle(request.title());
         listing.setPrice(request.price());
@@ -31,6 +31,7 @@ public class ListingService {
         listing.setGenderPreference(request.genderPreference());
         listing.setCity(city);
         listing.setDistrict(district);
+        listing.setRoomCount(request.roomCount());
         listing.setNeighborhood(neighborhood);
         ListingDetails details = new ListingDetails();
         details.setDescription(request.description());

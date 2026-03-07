@@ -3,16 +3,25 @@ package com.evarkdasim.evarkadasim_api.entity;
 import com.evarkdasim.evarkadasim_api.enums.listing.GenderPreference;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "listings")
+@Table(name = "listings",
+        indexes = {
+                @Index(name = "idx_listing_id", columnList = "id")
+        })
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EntityListeners(AuditingEntityListener.class)
 public class Listing {
 
     @Id
@@ -59,11 +68,11 @@ public class Listing {
     )
     private Set<Rule> rules = new HashSet<>();
 
+    @CreatedDate
     @Column(name = "created_at", updatable = false)
-    private java.time.LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
-    @PrePersist
-    protected void onCreate() {
-        createdAt = java.time.LocalDateTime.now();
-    }
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 }

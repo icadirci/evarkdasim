@@ -16,8 +16,8 @@ public class ListingDetails {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "listing_id") // Fiziksel kolon burada oluşur!
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "listing_id", unique = true)
     private Listing listing;
 
     @Column(columnDefinition = "TEXT") // @Lob yerine bu daha güvenlidir

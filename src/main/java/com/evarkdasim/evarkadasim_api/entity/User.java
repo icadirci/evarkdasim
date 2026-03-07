@@ -1,6 +1,6 @@
 package com.evarkdasim.evarkadasim_api.entity;
 
-import com.evarkdasim.evarkadasim_api.enums.User.Role;
+import com.evarkdasim.evarkadasim_api.enums.user.Role;
 import com.evarkdasim.evarkadasim_api.enums.listing.Gender;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -58,6 +58,16 @@ public class User implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Role role = Role.ROLE_USER;
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return this.active;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

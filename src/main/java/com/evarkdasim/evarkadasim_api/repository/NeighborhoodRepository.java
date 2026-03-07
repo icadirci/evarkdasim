@@ -5,5 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigInteger;
 
-public interface NeighborhoodRepository extends JpaRepository<Neighborhood, BigInteger> {
+public interface NeighborhoodRepository extends JpaRepository<Neighborhood, Long> {
 }
