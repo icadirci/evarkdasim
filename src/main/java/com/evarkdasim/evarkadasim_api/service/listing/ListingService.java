@@ -2,6 +2,7 @@ package com.evarkdasim.evarkadasim_api.service.listing;
 
 import com.evarkdasim.evarkadasim_api.dto.request.listing.CreateListingRequest;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.CreateListingResponse;
+import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.*;
 import com.evarkdasim.evarkadasim_api.repository.*;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +17,13 @@ public class ListingService {
     private final CityRepository cityRepository;
     private final DistrictRepository districtRepository;
     private final NeighborhoodRepository neighborhoodsRepository;
-    public List<Listing> getAllMyListing(User user){
-        return listingRepository.findAllByUserId(user.getId());
+
+    @org.springframework.transaction.annotation.Transactional(readOnly = true)
+    public List<MyListingResponse> getAllMyListing(User user){
+        return listingRepository.findAllByUserIdWithCityDistrict(user.getId())
+                .stream()
+                .map(MyListingResponse::fromEntity)
+                .toList();
     }
 
     public CreateListingResponse create(CreateListingRequest request, User user) {

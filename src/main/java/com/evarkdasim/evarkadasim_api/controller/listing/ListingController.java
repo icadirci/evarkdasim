@@ -2,7 +2,7 @@ package com.evarkdasim.evarkadasim_api.controller.listing;
 
 import com.evarkdasim.evarkadasim_api.dto.request.listing.CreateListingRequest;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.CreateListingResponse;
-import com.evarkdasim.evarkadasim_api.entity.Listing;
+import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.User;
 import com.evarkdasim.evarkadasim_api.service.listing.ListingService;
 import jakarta.validation.Valid;
@@ -21,8 +21,9 @@ public class ListingController {
     private final ListingService listingService;
 
     @GetMapping("/my-listings")
-    public ResponseEntity<List<Listing>> getAllMyListing(@AuthenticationPrincipal User user){
-        return ResponseEntity.ok().body(listingService.getAllMyListing(user));
+    public ResponseEntity<List<MyListingResponse>> getAllMyListing(@AuthenticationPrincipal User user){
+        List<MyListingResponse> response = listingService.getAllMyListing(user);
+        return ResponseEntity.ok().body(response);
     }
 
     @PostMapping
