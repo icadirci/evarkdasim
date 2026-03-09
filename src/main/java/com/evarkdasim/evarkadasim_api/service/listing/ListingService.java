@@ -4,11 +4,16 @@ import com.evarkdasim.evarkadasim_api.dto.request.listing.CreateListingRequest;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.CreateListingResponse;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.*;
+import com.evarkdasim.evarkadasim_api.exception.BusinessException;
 import com.evarkdasim.evarkadasim_api.repository.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -18,18 +23,35 @@ public class ListingService {
     private final DistrictRepository districtRepository;
     private final NeighborhoodRepository neighborhoodsRepository;
 
-    @org.springframework.transaction.annotation.Transactional(readOnly = true)
-    public List<MyListingResponse> getAllMyListing(User user){
-        return listingRepository.findAllByUserIdWithCityDistrict(user.getId())
-                .stream()
-                .map(MyListingResponse::fromEntity)
-                .toList();
+
+    @Transactional(readOnly = true)
+    public Page<MyListingResponse> getAllMyListing(User user, int page){
+        int pageSize = 10;
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
+        Page<Listing> listingsPage = listingRepository.findAllByUserIdWithCityDistrict(user.getId(),pageable);
+
+        if (page > listingsPage.getTotalPages() && listingsPage.getTotalPages() > 0) {
+            throw new BusinessException("İstediğiniz sayfa mevcut değil. Toplam sayfa: " + listingsPage.getTotalPages());
+        }
+        return listingsPage
+                .map(MyListingResponse::fromEntity);
     }
 
+    @Transactional
     public CreateListingResponse create(CreateListingRequest request, User user) {
+        boolean isValidLocation = listingRepository.validateLocationHierarchy(
+                request.cityId(),
+                request.districtId(),
+                request.neighborhoodId()
+        );
+
+        if (!isValidLocation) {
+            throw new BusinessException("Seçilen mahalle, ilçe veya şehir hiyerarşisi hatalı.");
+        }
         City city = cityRepository.getReferenceById(request.cityId());
         District district = districtRepository.getReferenceById(request.districtId());
         Neighborhood neighborhood = neighborhoodsRepository.getReferenceById(request.neighborhoodId());
+
         Listing listing = new Listing();
         listing.setTitle(request.title());
         listing.setPrice(request.price());

@@ -12,10 +12,7 @@ import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
-@Table(name = "listings",
-        indexes = {
-                @Index(name = "idx_listing_id", columnList = "id")
-        })
+@Table(name = "listings")
 @Getter
 @Setter
 @NoArgsConstructor
@@ -57,7 +54,7 @@ public class Listing {
     @Column(nullable = false, length = 20)
     private GenderPreference genderPreference;
 
-    @OneToOne(mappedBy = "listing", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "listing", fetch = FetchType.LAZY)
     private ListingDetails details;
 
     @ManyToMany(fetch = FetchType.LAZY)

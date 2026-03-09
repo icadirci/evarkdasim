@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestControllerAdvice
@@ -55,5 +56,16 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage());
 
         return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorResponse> handleBusinessException(BusinessException ex) {
+        ErrorResponse error = new ErrorResponse(
+                ex.getStatus().value(),
+                ex.getMessage(),
+                System.currentTimeMillis(),
+                null
+        );
+        return new ResponseEntity<>(error, ex.getStatus());
     }
 }

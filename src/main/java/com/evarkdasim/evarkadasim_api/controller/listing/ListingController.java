@@ -6,7 +6,9 @@ import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.User;
 import com.evarkdasim.evarkadasim_api.service.listing.ListingService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -21,8 +23,9 @@ public class ListingController {
     private final ListingService listingService;
 
     @GetMapping("/my-listings")
-    public ResponseEntity<List<MyListingResponse>> getAllMyListing(@AuthenticationPrincipal User user){
-        List<MyListingResponse> response = listingService.getAllMyListing(user);
+    public ResponseEntity<Page<MyListingResponse>> getAllMyListing(@AuthenticationPrincipal User user,
+                                                                   @RequestParam(defaultValue = "0") @Min(0) int page) {
+        Page<MyListingResponse> response = listingService.getAllMyListing(user, page);
         return ResponseEntity.ok().body(response);
     }
 
