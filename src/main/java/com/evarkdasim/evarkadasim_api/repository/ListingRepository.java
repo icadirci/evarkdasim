@@ -22,7 +22,7 @@ public interface ListingRepository extends JpaRepository<Listing, UUID> {
             """)
     Page<Listing> findAllByUserIdWithCityDistrict(@Param("userId") UUID userId, Pageable pageable);
 
-    @Query("SELECT COUNT(c) FROM City c " +
+    @Query("SELECT COUNT(c) > 0 FROM City c " +
             "JOIN c.districts d " +
             "JOIN d.neighborhoods n " +
             "WHERE c.id = :cityId AND d.id = :districtId AND n.id = :neighborhoodId")

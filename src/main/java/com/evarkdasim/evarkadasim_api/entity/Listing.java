@@ -29,7 +29,7 @@ public class Listing {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 255)
+    @Column(nullable = false)
     private String title;
 
     @Column(nullable = false, precision = 19, scale = 2)
