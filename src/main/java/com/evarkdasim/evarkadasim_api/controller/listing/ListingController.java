@@ -1,7 +1,9 @@
 package com.evarkdasim.evarkadasim_api.controller.listing;
 
 import com.evarkdasim.evarkadasim_api.dto.request.listing.CreateListingRequest;
+import com.evarkdasim.evarkadasim_api.dto.request.listing.ListingFilterRequest;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.CreateListingResponse;
+import com.evarkdasim.evarkadasim_api.dto.response.listing.ListingFilterResponse;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.User;
 import com.evarkdasim.evarkadasim_api.service.listing.ListingService;
@@ -34,7 +36,10 @@ public class ListingController {
     }
 
     @GetMapping
-    public ResponseEntity<ListingResponse> listings(){
-
+    public ResponseEntity<Page<ListingFilterResponse>> listings(
+            @AuthenticationPrincipal User user,
+            @Valid ListingFilterRequest listingFilterRequest){
+        Page<ListingFilterResponse> response = listingService.listings(listingFilterRequest, user);
+        return ResponseEntity.ok().body(response);
     }
 }

@@ -1,10 +1,13 @@
 package com.evarkdasim.evarkadasim_api.service.listing;
 
 import com.evarkdasim.evarkadasim_api.dto.request.listing.CreateListingRequest;
+import com.evarkdasim.evarkadasim_api.dto.request.listing.ListingFilterRequest;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.CreateListingResponse;
+import com.evarkdasim.evarkadasim_api.dto.response.listing.ListingFilterResponse;
 import com.evarkdasim.evarkadasim_api.dto.response.listing.MyListingResponse;
 import com.evarkdasim.evarkadasim_api.entity.*;
 import com.evarkdasim.evarkadasim_api.exception.BusinessException;
+import com.evarkdasim.evarkadasim_api.mapper.ListingMapper;
 import com.evarkdasim.evarkadasim_api.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -22,11 +25,11 @@ public class ListingService {
     private final CityRepository cityRepository;
     private final DistrictRepository districtRepository;
     private final NeighborhoodRepository neighborhoodsRepository;
-
+    private final int pageSize = 10;
+    private final ListingMapper listingMapper;
 
     @Transactional(readOnly = true)
     public Page<MyListingResponse> getAllMyListing(User user, int page){
-        int pageSize = 10;
         Pageable pageable = PageRequest.of(page, pageSize, Sort.by("createdAt").descending());
         Page<Listing> listingsPage = listingRepository.findAllByUserIdWithCityDistrict(user.getId(),pageable);
 
@@ -67,5 +70,11 @@ public class ListingService {
         listing.setDetails(details);
         Listing savedListing = listingRepository.save(listing);
         return CreateListingResponse.fromEntity(savedListing);
+    }
+
+    public Page<ListingFilterResponse> listings(ListingFilterRequest request, User user){
+        Pageable pageable = PageRequest.of(request.page(), pageSize, Sort.by("createdAt").descending());
+        Page<Listing> response = listingRepository.getAllListings(request.cityId(),request.districtId(),request.neighborhoodId(),user.getId(), pageable);
+        return response.map(listingMapper::toFilterResponse);
     }
 }

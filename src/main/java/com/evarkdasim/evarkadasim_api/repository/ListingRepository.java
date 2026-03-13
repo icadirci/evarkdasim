@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,4 +28,16 @@ public interface ListingRepository extends JpaRepository<Listing, UUID> {
             "JOIN d.neighborhoods n " +
             "WHERE c.id = :cityId AND d.id = :districtId AND n.id = :neighborhoodId")
     boolean validateLocationHierarchy(Long cityId, Long districtId, Long neighborhoodId);
+
+    @Query("""
+            select l
+            from Listing l
+              join fetch l.city c
+              join fetch l.district d
+            where (:cityId is null or l.city_id = :cityId)
+            and (:districtId is null or l.district_id = :districtId)
+            and (:neighborhoodId is null or l.neighborhood_id = :neighborhoodId)
+            and l.user_id = :userId
+            """)
+    Page<Listing> getAllListings(Long cityId, Long districtId, Long neighborhoodId, UUID userId, Pageable pageable);
 }

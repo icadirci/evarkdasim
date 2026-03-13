@@ -47,6 +47,12 @@ public class Listing {
     @JoinColumn(name = "neighborhood_id", nullable = false)
     private Neighborhood neighborhood;
 
+    @Column(nullable = true)
+    private String locationLat;
+
+    @Column(nullable = true)
+    private String locationLon;
+
     @Column(nullable = false)
     private int roomCount;
 
